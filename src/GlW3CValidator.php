@@ -95,18 +95,17 @@ class GlW3CValidator
      */
     private function sendToW3C($w3curl, $field, $htmltag, $file, $title, $csslist)
     {
-        $request  = $this->client->createRequest('POST', $w3curl);
-        $postBody = $request->getBody();
-        $postBody->addFile(
-                 new PostFile($field, fopen(
-                     $file,
-                     'r'
-                 ))
-        );
-
         $retry    = self::MAX_RETRY;
         $response = null;
         while ($retry--) {
+            $request  = $this->client->createRequest('POST', $w3curl);
+            $postBody = $request->getBody();
+            $postBody->addFile(
+                     new PostFile($field, fopen(
+                         $file,
+                         'r'
+                     ))
+            );
             $response = $this->client->send($request);
             if ($response->getStatusCode() == 200) {
                 break;
