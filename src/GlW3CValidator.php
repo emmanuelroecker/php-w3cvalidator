@@ -31,6 +31,9 @@ use GlHtml\GlHtml;
  */
 class GlW3CValidator
 {
+    const MAX_RETRY     = 3;
+    const WAITING_RETRY = 10;
+
     private $types = [
         'html' => [
             'w3curl'    => "http://validator.w3.org/check",
@@ -100,8 +103,18 @@ class GlW3CValidator
                      'r'
                  ))
         );
-        $response = $this->client->send($request);
-        $html     = $response->getBody()->getContents();
+
+        $retry    = self::MAX_RETRY;
+        $response = null;
+        while ($retry--) {
+            $response = $this->client->send($request);
+            if ($response->getStatusCode() == 200) {
+                break;
+            }
+            sleep(self::WAITING_RETRY);
+        }
+
+        $html = $response->getBody()->getContents();
 
         $html = new GlHtml($html);
 
@@ -152,12 +165,47 @@ class GlW3CValidator
     }
 
     /**
-     * @param array    $files
-     * @param callable $callback
+     * @param Finder|array $files
+     * @param callable     $callback
      *
      * @return array
      */
     public function validate($files, callable $callback)
+    {
+        if ($files instanceof Finder) {
+            return $this->validateFinder($files, $callback);
+        }
+
+        return $this->validateDirect($files, $callback);
+    }
+
+    /**
+     * @param Finder   $files
+     * @param callable $callback
+     *
+     * @return array
+     */
+    private function validateFinder(Finder $files, callable $callback)
+    {
+        $result = [];
+        /**
+         * @var SplFileInfo $file
+         */
+        foreach ($files as $file) {
+            $callback($file);
+            $result[] = $this->validateFile($file);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array|Finder $files
+     * @param callable     $callback
+     *
+     * @return array
+     */
+    private function validateDirect($files, callable $callback)
     {
         $result = [];
         foreach ($files as $fileelement) {
