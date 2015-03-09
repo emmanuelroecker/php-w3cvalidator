@@ -1,0 +1,50 @@
+html {
+    font-size: 100%;
+}
+
+body {
+    height: 100%;
+    padding-top: 80px;
+    padding-bottom: 40px;
+    font-family: "Verdana", Arial, serif;
+    font-size: 1em;
+}
+
+.container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.error {
+    background-color: rgba(237, 236, 233, 1);
+}
+
+.text-danger {
+    color: #a94442;
+}
+
+a {
+    color: #555;
+    text-decoration: none;
+}
+
+a.text-danger:hovers {
+    color: #843534;
+}
+
+a:focus, a:hover {
+    color: #222;
+    text-decoration: none;
+}
+
+a:active, a:hover {
+    outline: 0;
+}
+
+@media (min-width: 1200px) {
+    .container {
+        width: 1170px;
+    }
+}

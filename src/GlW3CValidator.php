@@ -76,10 +76,8 @@ class GlW3CValidator
         $this->client        = new Client();
         $this->resultrootdir = $resultrootdir;
 
-        $fs = new Filesystem();
-        $fs->remove([$resultrootdir]);
-        if (!is_dir($resultrootdir)) {
-            $fs->mkdir($resultrootdir);
+        if (!($this->fs->exists($resultrootdir))) {
+            $this->fs->mkdir($resultrootdir);
         }
     }
 
@@ -111,10 +109,13 @@ class GlW3CValidator
             if ($response->getStatusCode() == 200) {
                 break;
             }
+            echo 'retry';
             sleep(self::WAITING_RETRY);
         }
 
         $html = $response->getBody()->getContents();
+
+        //echo $html;
 
         $html = new GlHtml($html);
 
@@ -139,22 +140,25 @@ class GlW3CValidator
     /**
      * @param SplFileInfo $fileinfo
      *
+     * @throws \Exception
      * @return string
      */
     private function validateFile(SplFileInfo $fileinfo)
     {
+        $title   = $fileinfo->getRelativePathname();
+        $filedir = $this->resultrootdir . '/' . $fileinfo->getRelativepath();
+
         $ext = $fileinfo->getExtension();;
         $view = $this->sendToW3C(
                      $this->types[$ext]['w3curl'],
                          $this->types[$ext]['field'],
                          $this->types[$ext]['resulttag'],
-                         $fileinfo->getRealpath(),
-                         $fileinfo->getRelativePathname(),
+                         $fileinfo->getRealPath(),
+                         $title,
                          $this->types[$ext]['css']
         );
 
-        $filedir = $this->resultrootdir . '/' . $fileinfo->getRelativepath();
-        if (!is_dir($filedir)) {
+        if (!$this->fs->exists($filedir)) {
             $this->fs->mkdir($filedir);
         }
         $resultname = $filedir . "/w3c_" . $ext . "_" . $fileinfo->getBaseName($ext) . 'html';
@@ -165,29 +169,42 @@ class GlW3CValidator
     }
 
     /**
-     * @param Finder|array $files
-     * @param callable     $callback
+     * @param array    $files
+     * @param array    $types
+     * @param callable $callback
      *
+     * @throws \Exception
      * @return array
      */
-    public function validate($files, callable $callback)
+    public function validate(array $files, array $types, callable $callback)
     {
-        if ($files instanceof Finder) {
-            return $this->validateFinder($files, $callback);
+        $filter = '/\.(' . implode('|', $types) . ')$/';
+
+        $results = [];
+        foreach ($files as $file) {
+            if ($file instanceof Finder) {
+                $this->validateFinder($file, $filter, $callback, $results);
+            } else {
+                if (is_string($file)) {
+                    $this->validateDirect($file, $filter, $callback, $results);
+                } else {
+                    throw new \Exception('Must be a string or a finder');
+                }
+            }
         }
 
-        return $this->validateDirect($files, $callback);
+        return $results;
     }
 
     /**
      * @param Finder   $files
+     * @param string   $filter
      * @param callable $callback
-     *
-     * @return array
+     * @param array    $result
      */
-    private function validateFinder(Finder $files, callable $callback)
+    private function validateFinder(Finder $files, $filter, callable $callback, array &$result)
     {
-        $result = [];
+        $files->name($filter);
         /**
          * @var SplFileInfo $file
          */
@@ -195,37 +212,32 @@ class GlW3CValidator
             $callback($file);
             $result[] = $this->validateFile($file);
         }
-
-        return $result;
     }
 
     /**
-     * @param array|Finder $files
-     * @param callable     $callback
-     *
-     * @return array
+     * @param string   $file
+     * @param string   $filter
+     * @param callable $callback
+     * @param array    $result
      */
-    private function validateDirect($files, callable $callback)
+    private function validateDirect($file, $filter, callable $callback, array &$result)
     {
-        $result = [];
-        foreach ($files as $fileelement) {
-            if (is_dir($fileelement)) {
-                $finder = new Finder();
-                $finder->files()->in($fileelement)->name('/\.(css|html)$/');
-                /**
-                 * @var SplFileInfo $finderfile
-                 */
-                foreach ($finder as $finderfile) {
-                    $callback($finderfile->getRealPath());
-                    $result[] = $this->validateFile($finderfile);
-                }
-            } else {
-                $callback($fileelement);
-                $finderfile = new SplFileInfo($fileelement, "", "");
-                $result[]   = $this->validateFile($finderfile);
+        if (is_dir($file)) {
+            $finder = new Finder();
+            $finder->files()->in($file)->name($filter);
+            /**
+             * @var SplFileInfo $finderfile
+             */
+            foreach ($finder as $finderfile) {
+                $callback($finderfile);
+                $result[] = $this->validateFile($finderfile);
+            }
+        } else {
+            if (preg_match($filter, $file)) {
+                $finderfile = new SplFileInfo($file, "", "");
+                $callback($finderfile);
+                $result[] = $this->validateFile($finderfile);
             }
         }
-
-        return $result;
     }
 } 

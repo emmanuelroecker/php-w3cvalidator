@@ -27,18 +27,73 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class GlValidatorTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testHtmlCssFinder()
+    public function testHtml()
     {
         $finder = new Finder();
-        $files = $finder->files()->in(__DIR__ . "/entry/")->name('/\.(css|html)$/');
+        $files  = $finder->files()->in(__DIR__ . "/entry/");
+        $files  = [$files, __DIR__ . "/glicer.css", __DIR__ . "/glicer.html"];
 
-        $validator = new GlW3CValidator(__DIR__ . "/result/");
+        $validator = new GlW3CValidator(__DIR__ . "/result");
+        $count     = 0;
+        $result    = $validator->validate(
+                               $files,
+                                   ['html'],
+                                   function (SplFileInfo $file) use (&$count) {
+                                       $filename = strtr($file->getRelativePathname(), ["\\" => "/"]);
+                                       if (strlen($filename) == "") {
+                                           $filename = $file->getBasename();
+                                       }
+                                       switch ($count) {
+                                           case 0:
+                                               $this->assertEquals("test1/index.html", $filename);
+                                               break;
+                                           case 1:
+                                               $this->assertEquals("test2/index.html", $filename);
+                                               break;
+                                           case 2:
+                                               $this->assertEquals("glicer.html", $filename);
+                                               break;
+                                           default:
+                                               $this->fail(
+                                                    "Error count $count with $filename"
+                                               );
+                                       }
+                                       $count++;
+                                   }
+        );
+
+        $filestest = [
+            "test1/w3c_html_index.html",
+            "test2/w3c_html_index.html",
+            "w3c_html_glicer.html"
+        ];
+
+        $this->assertEquals(count($filestest), $count);
+        $this->assertEquals(count($filestest), count($result));
+
+        foreach ($filestest as $file) {
+            $this->assertFileEquals(__DIR__ . "/expected/" . $file, __DIR__ . "/result/" . $file);
+        }
+    }
+
+    public function testHtmlCss()
+    {
+        $finder = new Finder();
+        $files  = $finder->files()->in(__DIR__ . "/entry/");
+        $files  = [$files, __DIR__ . "/glicer.css", __DIR__ . "/glicer.html"];
+
+        $validator = new GlW3CValidator(__DIR__ . "/result");
+
         $count  = 0;
         $result = $validator->validate(
                             $files,
-                                function (SplFileInfo $filename) use (&$count) {
-                                    $filename = strtr($filename->getRelativePathname(), ["\\" => "/"]);
+                                ['html', 'css'],
+                                function (SplFileInfo $file) use (&$count) {
+
+                                    $filename = strtr($file->getRelativePathname(), ["\\" => "/"]);
+                                    if (strlen($filename) == "") {
+                                        $filename = $file->getBasename();
+                                    }
                                     switch ($count) {
                                         case 0:
                                             $this->assertEquals("test1/css/glicer.css", $filename);
@@ -52,58 +107,35 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
                                         case 3:
                                             $this->assertEquals("test2/index.html", $filename);
                                             break;
+                                        case 4:
+                                            $this->assertEquals("glicer.css", $filename);
+                                            break;
+                                        case 5:
+                                            $this->assertEquals("glicer.html", $filename);
+                                            break;
                                         default:
+                                            $this->fail(
+                                                 "Error count $count with $filename"
+                                            );
                                     }
                                     $count++;
                                 }
         );
 
-        $this->assertEquals(4, $count);
-        $this->assertEquals(4, count($result));
+        $filestest = [
+            "test1/w3c_html_index.html",
+            "test1/css/w3c_css_glicer.html",
+            "test2/w3c_html_index.html",
+            "test2/css/w3c_css_glicer.html",
+            "w3c_html_glicer.html",
+            "w3c_css_glicer.html"
+        ];
 
-        $filestest = ["test1/w3c_html_index.html","test1/css/w3c_css_glicer.html","test2/w3c_html_index.html","test2/css/w3c_css_glicer.html"];
-
-        foreach ($filestest as $file) {
-            $this->assertFileEquals(__DIR__ . "/expected/" . $file,__DIR__. "/result/" . $file);
-        }
-    }
-
-    public function testHtmlCssDirect()
-    {
-        $validator = new GlW3CValidator(__DIR__ . "/result/");
-
-        $count  = 0;
-        $result = $validator->validate(
-                            [__DIR__ . "/entry/"],
-                                function ($filename) use (&$count) {
-                                    $filename = strtr($filename, ["\\" => "/"]);
-                                    $dir = strtr(__DIR__ , ["\\" => "/"]);
-                                    switch ($count) {
-                                        case 0:
-                                            $this->assertEquals($dir . "/entry/test1/css/glicer.css", $filename);
-                                            break;
-                                        case 1:
-                                            $this->assertEquals($dir . "/entry/test1/index.html", $filename);
-                                            break;
-                                        case 2:
-                                            $this->assertEquals($dir . "/entry/test2/css/glicer.css", $filename);
-                                            break;
-                                        case 3:
-                                            $this->assertEquals($dir . "/entry/test2/index.html", $filename);
-                                            break;
-                                        default:
-                                    }
-                                    $count++;
-                                }
-        );
-
-        $this->assertEquals(4, $count);
-        $this->assertEquals(4, count($result));
-
-        $filestest = ["test1/w3c_html_index.html","test1/css/w3c_css_glicer.html","test2/w3c_html_index.html","test2/css/w3c_css_glicer.html"];
+        $this->assertEquals(count($filestest), $count);
+        $this->assertEquals(count($filestest), count($result));
 
         foreach ($filestest as $file) {
-            $this->assertFileEquals(__DIR__ . "/expected/" . $file,__DIR__. "/result/" . $file);
+            $this->assertFileEquals(__DIR__ . "/expected/" . $file, __DIR__ . "/result/" . $file);
         }
     }
 }
