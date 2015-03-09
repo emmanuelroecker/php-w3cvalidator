@@ -109,7 +109,6 @@ class GlW3CValidator
             if ($response->getStatusCode() == 200) {
                 break;
             }
-            echo 'retry';
             sleep(self::WAITING_RETRY);
         }
 
