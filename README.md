@@ -1,32 +1,64 @@
 # php-w3cvalidator
-Validates html and css using w3c markup and css validation free service
 
-## In progress
+Validates html and css using [w3c markup validation](http://validator.w3.org/) and [w3c css validation](http://jigsaw.w3.org/css-validator/).
 
-## Installing via Composer
+## Installation
 
-The recommended way to install is through
-[Composer](http://getcomposer.org).
+This library can be found on [Packagist](https://packagist.org/packages/glicer/w3c-validator).
 
-```bash
-# Install Composer
-curl -sS https://getcomposer.org/installer | php
+The recommended way to install is through [composer](http://getcomposer.org).
+
+Edit your `composer.json` and add:
+
+```json
+{
+    "require": {
+       "glicer/w3cvalidator": "dev-master"
+    }
+}
 ```
 
-Next, run the Composer command to install the latest stable version :
+And install dependencies:
 
 ```bash
-composer require glicer/w3cvalidator
+php composer.phar install
 ```
 
-After installing, you need to require Composer's autoloader:
+## Example
 
 ```php
-require 'vendor/autoload.php';
+     <?php
+     // Must point to composer's autoload file.
+     require 'vendor/autoload.php';
+
+    use Symfony\Component\Finder\SplFileInfo;
+    use Symfony\Component\Finder\Finder;
+    use GlValidator\GlW3CValidator;
+
+    //create validator with directory destination of reports
+    $validator = new GlW3CValidator(__DIR__ . "/result");
+
+    //list of files to validate, it can be a Finder Symfony Object
+    $finder = new Finder();
+    $files  = $finder->files()->in(__DIR__ . "/entry/");      //all files in entry directory
+    $files  = [$files, __DIR__ . "/glicer.css", __DIR__ . "/glicer.html"]; //add glicer.css and glicer.html
+
+    //return array of reports path in html format
+    $results = $validator->validate(
+                                    $files,
+                                    ['html', 'css'],  //validate html and css files
+                                    function (SplFileInfo $file) { //callback function
+                                            echo $file->getRealpath();
+                                    }
+                                    );
+
 ```
+
+In this example, you can view reports result/w3c_css_glicer.html, result/w3c_html_glicer.html, result/... in your browser
 
 ## Contact
 
 Authors : Emmanuel ROECKER & Rym BOUCHAGOUR
 
-Homepage : [http://dev.glicer.com](http://dev.glicer.com)
+[Web Development Blog - http://dev.glicer.com](http://dev.glicer.com/)
+

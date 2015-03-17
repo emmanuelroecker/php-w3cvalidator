@@ -34,5 +34,6 @@
         "psr-4": {
             "GlValidator\\Tests\\": "tests/"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }

@@ -9,7 +9,7 @@
  * @author    Rym BOUCHAGOUR
  * @copyright 2015 GLICER
  * @license   MIT
- * @link      http://www.glicer.com
+ * @link      http://dev.glicer.com/
  *
  * Created : 19/02/15
  * File : GlW3CValidator.php
@@ -113,8 +113,6 @@ class GlW3CValidator
         }
 
         $html = $response->getBody()->getContents();
-
-        //echo $html;
 
         $html = new GlHtml($html);
 
