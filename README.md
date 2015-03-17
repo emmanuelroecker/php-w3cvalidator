@@ -1,6 +1,6 @@
 # php-w3cvalidator
 
-Validates html and css using [w3c markup validation](http://validator.w3.org/) and [w3c css validation](http://jigsaw.w3.org/css-validator/).
+Validate html and css files using [w3c markup validation](http://validator.w3.org/) and [w3c css validation](http://jigsaw.w3.org/css-validator/).
 
 ## Installation
 
@@ -13,7 +13,7 @@ Edit your `composer.json` and add:
 ```json
 {
     "require": {
-       "glicer/w3cvalidator": "dev-master"
+      "glicer/w3c-validator": "dev-master"
     }
 }
 ```
@@ -40,8 +40,12 @@ php composer.phar install
 
     //list of files to validate, it can be a Finder Symfony Object
     $finder = new Finder();
-    $files  = $finder->files()->in(__DIR__ . "/entry/");      //all files in entry directory
-    $files  = [$files, __DIR__ . "/glicer.css", __DIR__ . "/glicer.html"]; //add glicer.css and glicer.html
+
+    //all files in entry directory
+    $files  = $finder->files()->in(__DIR__ . "/entry/");
+
+     //add glicer.css and glicer.html
+    $files  = [$files, __DIR__ . "/glicer.css", __DIR__ . "/glicer.html"];
 
     //return array of reports path in html format
     $results = $validator->validate(
@@ -54,7 +58,7 @@ php composer.phar install
 
 ```
 
-In this example, you can view reports result/w3c_css_glicer.html, result/w3c_html_glicer.html, result/... in your browser
+In this example, you can view reports result/w3c_css_glicer.html, result/w3c_html_glicer.html, result/... in your browser.
 
 ## Contact
 
