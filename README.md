@@ -60,6 +60,14 @@ php composer.phar install
 
 In this example, you can view reports result/w3c_css_glicer.html, result/w3c_html_glicer.html, result/... in your browser.
 
+## Running Tests
+
+Launch from command line :
+
+```console
+vendor\bin\phpunit
+```
+
 ## Contact
 
 Authors : Emmanuel ROECKER & Rym BOUCHAGOUR
