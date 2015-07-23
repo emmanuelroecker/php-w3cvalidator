@@ -37,11 +37,10 @@ class GlW3CValidator
     private $types = [
         'html' => [
             'w3curl'    => "http://validator.w3.org/check",
-            'resulttag' => '#result',
+            'resulttag' => '#results',
             'field'     => 'uploaded_file',
             'css'       => [
-                'url("http://validator.w3.org/style/base")',
-                'url("http://validator.w3.org/style/results")'
+                'url("https://validator.w3.org/nu/style.css")'
             ]
         ],
         'css'  => [
@@ -124,10 +123,16 @@ class GlW3CValidator
         $style .= '</style>';
         $html->get("head")[0]->add($style);
 
+
+        $stats = $html->get("p.stats");
+        if (isset($stats) && count($stats) > 0) {
+            $stats[0]->delete();
+        }
+
         $head   = $html->get("head")[0]->getHtml();
         $result = $html->get($htmltag)[0]->getHtml();
 
-        $view = "<!DOCTYPE html><html><head>" .
+        $view = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">' .
             $head . "</head><body><h2>$title</h2>" .
             $result . "</body></html>";
 

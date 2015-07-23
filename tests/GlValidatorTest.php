@@ -72,7 +72,10 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($filestest), count($result));
 
         foreach ($filestest as $file) {
-            $this->assertFileEquals(__DIR__ . "/expected/" . $file, __DIR__ . "/result/" . $file);
+            $src = __DIR__ . "/expected/" . $file;
+            $dst = __DIR__ . "/result/" . $file;
+
+            $this->assertFileEquals($src, $dst, "$src different to $dst");
         }
     }
 
@@ -135,7 +138,10 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($filestest), count($result));
 
         foreach ($filestest as $file) {
-            $this->assertFileEquals(__DIR__ . "/expected/" . $file, __DIR__ . "/result/" . $file);
+            $src = __DIR__ . "/expected/" . $file;
+            $dst = __DIR__ . "/result/" . $file;
+
+            $this->assertFileEquals($src, $dst, "$src different $dst");
         }
     }
 }
