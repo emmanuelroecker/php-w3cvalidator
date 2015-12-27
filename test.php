@@ -23,6 +23,7 @@ $src = file_get_contents(
 );
 $dst = file_get_contents("/home/travis/build/emmanuelroecker/php-w3cvalidator/tests/result/test1/w3c_html_index.html");
 
-echo strcmp($src, $dst);
+var_dump(strcmp($src, $dst));
+
 
 
