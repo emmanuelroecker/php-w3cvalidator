@@ -72,7 +72,7 @@ class GlW3CValidator
     public function __construct($resultrootdir)
     {
         $this->fs            = new Filesystem();
-        $this->client        = new Client();
+        //$this->client        = new Client();
         $this->resultrootdir = $resultrootdir;
 
         if (!($this->fs->exists($resultrootdir))) {
@@ -92,6 +92,7 @@ class GlW3CValidator
      */
     private function sendToW3C($w3curl, $field, $htmltag, $file, $title, $csslist)
     {
+        $this->client        = new Client();
         $request  = $this->client->createRequest('POST', $w3curl, ['exceptions' => false]);
         $postBody = $request->getBody();
         $postBody->addFile(
