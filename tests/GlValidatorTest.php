@@ -90,6 +90,18 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
             $src = __DIR__ . "/expected/" . $file;
             $dst = __DIR__ . "/result/" . $file;
 
+
+            $expectedDom = new \DomDocument();
+            $expectedDom->loadHTMLFile($src);
+            $expectedDom->preserveWhiteSpace = false;
+
+            $actualDom = new \DomDocument();
+            $actualDom->loadHTMLFile($dst);
+            $actualDom->preserveWhiteSpace = false;
+
+            $this->assertEquals($expectedDom->saveHTML(), $actualDom->saveHTML());
+
+            /*
             $srccontent = file_get_contents($src);
             $dstcontent = file_get_contents($dst);
 
@@ -97,7 +109,7 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
             $dstencoding = mb_detect_encoding($dstcontent);
 
             $this->assertEquals(0, strcmp($srccontent, $dstcontent),"$srcencoding\n\n$dstencoding");
-
+            */
             //$this->assertEquals($srcencoding, $dstencoding, "$src:$srcencoding different to $dst:$dstencoding ");
 
             //$this->assertEquals($srccontent, $dstcontent, "$src different to $dst");
