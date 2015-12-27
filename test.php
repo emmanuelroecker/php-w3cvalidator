@@ -21,5 +21,5 @@
 $src = file_get_contents("/home/travis/build/emmanuelroecker/php-w3cvalidator/tests/expected/test1/w3c_html_index.html");
 $dst = file_get_contents("/home/travis/build/emmanuelroecker/php-w3cvalidator/tests/result/test1/w3c_html_index.html");
 
-var_dump($src);
-var_dump($dst);
+echo bin2hex($src) . "\n";
+echo bin2hex($dst) . "\n";
