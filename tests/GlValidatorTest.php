@@ -75,7 +75,15 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
             $src = __DIR__ . "/expected/" . $file;
             $dst = __DIR__ . "/result/" . $file;
 
-            $this->assertFileEquals($src, $dst, "$src different to $dst");
+            $srccontent = file_get_contents($src);
+            $dstcontent = file_get_contents($dst);
+
+            $srcencoding = mb_detect_encoding($srccontent);
+            $dstencoding = mb_detect_encoding($dstcontent);
+
+            $this->assertEquals($srcencoding,$dstencoding, "$src:$srcencoding different to $dst:$dstencoding ");
+
+            $this->assertEquals($srccontent,$dstcontent, "$src different to $dst");
         }
     }
 
@@ -141,7 +149,15 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
             $src = __DIR__ . "/expected/" . $file;
             $dst = __DIR__ . "/result/" . $file;
 
-            $this->assertFileEquals($src, $dst, "$src different $dst");
+            $srccontent = file_get_contents($src);
+            $dstcontent = file_get_contents($dst);
+
+            $srcencoding = mb_detect_encoding($srccontent);
+            $dstencoding = mb_detect_encoding($dstcontent);
+
+            $this->assertEquals($srcencoding,$dstencoding, "$src:$srcencoding different to $dst:$dstencoding ");
+
+            $this->assertEquals($srccontent,$dstcontent, "$src different to $dst");
         }
     }
 }
