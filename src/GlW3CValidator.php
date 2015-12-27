@@ -60,11 +60,6 @@ class GlW3CValidator
     private $fs;
 
     /**
-     * @var \GuzzleHttp\Client
-     */
-    private $client;
-
-    /**
      * @var string
      */
     private $resultrootdir;
@@ -72,7 +67,6 @@ class GlW3CValidator
     public function __construct($resultrootdir)
     {
         $this->fs            = new Filesystem();
-        //$this->client        = new Client();
         $this->resultrootdir = $resultrootdir;
 
         if (!($this->fs->exists($resultrootdir))) {
@@ -92,8 +86,8 @@ class GlW3CValidator
      */
     private function sendToW3C($w3curl, $field, $htmltag, $file, $title, $csslist)
     {
-        $this->client        = new Client();
-        $request  = $this->client->createRequest('POST', $w3curl, ['exceptions' => false]);
+        $client        = new Client();
+        $request  = $client->createRequest('POST', $w3curl, ['exceptions' => false]);
         $postBody = $request->getBody();
         $postBody->addFile(
                  new PostFile($field, fopen(
@@ -105,7 +99,7 @@ class GlW3CValidator
         $retry    = self::MAX_RETRY;
         $response = null;
         while ($retry--) {
-            $response = $this->client->send($request);
+            $response = $client->send($request);
             if ($response->getStatusCode() == 200) {
                 break;
             }
