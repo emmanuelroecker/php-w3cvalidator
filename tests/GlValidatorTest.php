@@ -27,6 +27,21 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class GlValidatorTest extends \PHPUnit_Framework_TestCase
 {
+    private function file_get_contents_utf8($filename)
+    {
+        $opts = array(
+            'http' => array(
+                'method' => "GET",
+                'header' => "Content-Type: text/html; charset=utf-8"
+            )
+        );
+
+        $context = stream_context_create($opts);
+        $result  = @file_get_contents($filename, false, $context);
+
+        return $result;
+    }
+
     public function testHtml()
     {
         $finder = new Finder();
@@ -75,15 +90,15 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
             $src = __DIR__ . "/expected/" . $file;
             $dst = __DIR__ . "/result/" . $file;
 
-            $srccontent = file_get_contents($src);
-            $dstcontent = file_get_contents($dst);
+            $srccontent = $this->file_get_contents_utf8($src);
+            $dstcontent = $this->file_get_contents_utf8($dst);
 
-            $srcencoding = mb_detect_encoding($srccontent);
-            $dstencoding = mb_detect_encoding($dstcontent);
+            $srcencoding = mb_detect_encoding($srccontent, "UTF-8");
+            $dstencoding = mb_detect_encoding($dstcontent, "UTF-8");
 
-            $this->assertEquals($srcencoding,$dstencoding, "$src:$srcencoding different to $dst:$dstencoding ");
+            $this->assertEquals($srcencoding, $dstencoding, "$src:$srcencoding different to $dst:$dstencoding ");
 
-            $this->assertEquals($srccontent,$dstcontent, "$src different to $dst");
+            $this->assertEquals($srccontent, $dstcontent, "$src different to $dst");
         }
     }
 
@@ -149,15 +164,15 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
             $src = __DIR__ . "/expected/" . $file;
             $dst = __DIR__ . "/result/" . $file;
 
-            $srccontent = file_get_contents($src);
-            $dstcontent = file_get_contents($dst);
+            $srccontent = $this->file_get_contents_utf8($src);
+            $dstcontent = $this->file_get_contents_utf8($dst);
 
-            $srcencoding = mb_detect_encoding($srccontent);
-            $dstencoding = mb_detect_encoding($dstcontent);
+            $srcencoding = mb_detect_encoding($srccontent, "UTF-8");
+            $dstencoding = mb_detect_encoding($dstcontent, "UTF-8");
 
-            $this->assertEquals($srcencoding,$dstencoding, "$src:$srcencoding different to $dst:$dstencoding ");
+            $this->assertEquals($srcencoding, $dstencoding, "$src:$srcencoding different to $dst:$dstencoding ");
 
-            $this->assertEquals($srccontent,$dstcontent, "$src different to $dst");
+            $this->assertEquals($srccontent, $dstcontent, "$src different to $dst");
         }
     }
 }
