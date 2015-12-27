@@ -6,6 +6,6 @@ php:
 install:
   - composer install
 script:
-  - php ./test.php
   - ./vendor/bin/phpunit -v --debug
+  - php ./test.php
 

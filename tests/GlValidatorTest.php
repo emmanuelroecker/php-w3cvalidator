@@ -100,8 +100,8 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
 
             $this->assertEquals($srccontent, $dstcontent, "$src different to $dst");
 
-            var_dump($srccontent);
-            var_dump($dstcontent);
+            print_r($srccontent);
+            print_r($dstcontent);
         }
     }
 
