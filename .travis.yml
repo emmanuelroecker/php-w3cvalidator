@@ -7,6 +7,5 @@ install:
   - composer install
 script:
   - php ./test.php
-  - ./vendor/bin/phpunit -v --debug --coverage-clover ./tests/logs/clover.xml
-after_script:
-  - php vendor/bin/coveralls -v
+  - ./vendor/bin/phpunit -v --debug
+
