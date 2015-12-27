@@ -99,6 +99,9 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($srcencoding, $dstencoding, "$src:$srcencoding different to $dst:$dstencoding ");
 
             $this->assertEquals($srccontent, $dstcontent, "$src different to $dst");
+
+            var_dump($srccontent);
+            var_dump($dstcontent);
         }
     }
 
@@ -173,6 +176,9 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($srcencoding, $dstencoding, "$src:$srcencoding different to $dst:$dstencoding ");
 
             $this->assertEquals($srccontent, $dstcontent, "$src different to $dst");
+
+            var_dump($srccontent);
+            var_dump($dstcontent);
         }
     }
 }
