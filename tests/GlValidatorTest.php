@@ -90,18 +90,20 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
             $src = __DIR__ . "/expected/" . $file;
             $dst = __DIR__ . "/result/" . $file;
 
-            $srccontent = $this->file_get_contents_utf8($src);
-            $dstcontent = $this->file_get_contents_utf8($dst);
+            $srccontent = file_get_contents($src);
+            $dstcontent = file_get_contents($dst);
 
-            $srcencoding = mb_detect_encoding($srccontent, "UTF-8");
-            $dstencoding = mb_detect_encoding($dstcontent, "UTF-8");
+            //$srcencoding = mb_detect_encoding($srccontent, "UTF-8");
+            //$dstencoding = mb_detect_encoding($dstcontent, "UTF-8");
 
-            $this->assertEquals($srcencoding, $dstencoding, "$src:$srcencoding different to $dst:$dstencoding ");
+            $this->assertEquals(0, strcmp($srccontent, $dstcontent));
 
-            $this->assertEquals($srccontent, $dstcontent, "$src different to $dst");
+            //$this->assertEquals($srcencoding, $dstencoding, "$src:$srcencoding different to $dst:$dstencoding ");
 
-            print_r($srccontent);
-            print_r($dstcontent);
+            //$this->assertEquals($srccontent, $dstcontent, "$src different to $dst");
+
+            //print_r($srccontent);
+            //print_r($dstcontent);
         }
     }
 
@@ -177,8 +179,8 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
 
             $this->assertEquals($srccontent, $dstcontent, "$src different to $dst");
 
-            var_dump($srccontent);
-            var_dump($dstcontent);
+            //var_dump($srccontent);
+            //var_dump($dstcontent);
         }
     }
 }
