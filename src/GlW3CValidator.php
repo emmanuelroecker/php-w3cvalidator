@@ -147,15 +147,15 @@ class GlW3CValidator
      */
     private function validateFile(SplFileInfo $fileinfo)
     {
-        $title   = $fileinfo->getRelativePathname();
-        $filedir = $this->resultrootdir . '/' . $fileinfo->getRelativepath();
+        $title   = strtr($fileinfo->getRelativePathname(), ["\\" => "/"]);
+        $filedir = $this->resultrootdir . '/' . strtr($fileinfo->getRelativepath(), ["\\" => "/"]);
 
         $ext = $fileinfo->getExtension();;
         $view = $this->sendToW3C(
                      $this->types[$ext]['w3curl'],
                          $this->types[$ext]['field'],
                          $this->types[$ext]['resulttag'],
-                         $fileinfo->getRealPath(),
+                         strtr($fileinfo->getRealPath(), ["\\" => "/"]),
                          $title,
                          $this->types[$ext]['css']
         );

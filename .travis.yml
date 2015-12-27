@@ -7,5 +7,4 @@ install:
   - composer install
 script:
   - ./vendor/bin/phpunit -v --debug
-  - php ./test.php
 

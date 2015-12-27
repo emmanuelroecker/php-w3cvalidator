@@ -75,7 +75,7 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
             $src = __DIR__ . "/expected/" . $file;
             $dst = __DIR__ . "/result/" . $file;
 
-            $this->assertFileEquals($src, $dst);
+            $this->assertFileEquals($src, $dst, "$src different to $dst");
         }
     }
 
@@ -141,7 +141,7 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
             $src = __DIR__ . "/expected/" . $file;
             $dst = __DIR__ . "/result/" . $file;
 
-            $this->assertFileEquals($src, $dst);
+            $this->assertFileEquals($src, $dst, "$src different to $dst");
         }
     }
 }
