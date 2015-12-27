@@ -93,10 +93,10 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
             $srccontent = file_get_contents($src);
             $dstcontent = file_get_contents($dst);
 
-            //$srcencoding = mb_detect_encoding($srccontent, "UTF-8");
-            //$dstencoding = mb_detect_encoding($dstcontent, "UTF-8");
+            $srcencoding = mb_detect_encoding($srccontent);
+            $dstencoding = mb_detect_encoding($dstcontent);
 
-            $this->assertEquals(0, strcmp($srccontent, $dstcontent),"$srccontent\n\n$dstcontent");
+            $this->assertEquals(0, strcmp($srccontent, $dstcontent),"$srcencoding\n\n$dstencoding");
 
             //$this->assertEquals($srcencoding, $dstencoding, "$src:$srcencoding different to $dst:$dstencoding ");
 
