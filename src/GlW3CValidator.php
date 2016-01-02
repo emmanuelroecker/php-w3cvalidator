@@ -32,7 +32,6 @@ use GlHtml\GlHtml;
 class GlW3CValidator
 {
     const MAX_RETRY     = 3;
-    const WAITING_RETRY = 10;
 
     private $types = [
         'html' => [
@@ -103,7 +102,6 @@ class GlW3CValidator
             if ($response->getStatusCode() == 200) {
                 break;
             }
-            sleep(self::WAITING_RETRY);
         }
 
         $html = $response->getBody()->getContents();
@@ -159,7 +157,6 @@ class GlW3CValidator
             $this->fs->mkdir($filedir);
         }
         $resultname = $filedir . "/w3c_" . $ext . "_" . $fileinfo->getBaseName($ext) . 'html';
-        $list[]     = $resultname;
         file_put_contents($resultname, $view);
 
         return $resultname;
@@ -237,4 +234,4 @@ class GlW3CValidator
             }
         }
     }
-} 
+}
