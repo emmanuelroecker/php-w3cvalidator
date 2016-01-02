@@ -3,6 +3,11 @@ php:
   - '5.4'
   - '5.5'
   - '5.6'
+services:
+  - docker
+before_install:
+  - docker pull magnetikonline/html5validator
+  - docker run -d -p 8080:80 -p 8888:8888 magnetikonline/html5validator
 install:
   - composer install
 script:
