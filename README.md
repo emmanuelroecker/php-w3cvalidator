@@ -13,7 +13,7 @@ This library can be found on [Packagist](https://packagist.org/packages/glicer/w
 
 The recommended way to install is through [composer](http://getcomposer.org).
 
-Edit your `composer.json` and add:
+Edit your `composer.json` and add :
 
 ```json
 {
@@ -23,7 +23,7 @@ Edit your `composer.json` and add:
 }
 ```
 
-And install dependencies:
+Install dependencies :
 
 ```bash
 php composer.phar install
@@ -32,38 +32,38 @@ php composer.phar install
 ## Example
 
 ```php
-     <?php
-     // Must point to composer's autoload file.
-     require 'vendor/autoload.php';
+<?php
+// Must point to composer's autoload file.
+require 'vendor/autoload.php';
 
-    use Symfony\Component\Finder\SplFileInfo;
-    use Symfony\Component\Finder\Finder;
-    use GlValidator\GlW3CValidator;
+use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Finder\Finder;
+use GlValidator\GlW3CValidator;
 
-    //create validator with directory destination of reports
-    $validator = new GlW3CValidator(__DIR__ . "/result");
+//create validator with directory destination of reports
+$validator = new GlW3CValidator(__DIR__ . "/result");
 
-    //list of files to validate, it can be a Finder Symfony Object
-    $finder = new Finder();
+//list of files to validate, it can be a Finder Symfony Object
+$finder = new Finder();
 
-    //all files in entry directory
-    $files  = $finder->files()->in(__DIR__ . "/entry/");
+//all files in entry directory
+$files  = $finder->files()->in(__DIR__ . "/entry/");
 
-     //add glicer.css and glicer.html
-    $files  = [$files, __DIR__ . "/glicer.css", __DIR__ . "/glicer.html"];
+ //add glicer.css and glicer.html
+$files  = [$files, __DIR__ . "/glicer.css", __DIR__ . "/glicer.html"];
 
-    //return array of reports path in html format
-    $results = $validator->validate(
-                                    $files,
-                                    ['html', 'css'],  //validate html and css files
-                                    function (SplFileInfo $file) { //callback function
-                                            echo $file->getRealpath();
-                                    }
-                                    );
+//return array of reports path in html format
+$results = $validator->validate(
+                                $files,
+                                ['html', 'css'],  //validate html and css files
+                                function (SplFileInfo $file) { //callback function
+                                        echo $file->getRealpath();
+                                }
+                                );
 
 ```
 
-In this example, you can view reports result/w3c_css_glicer.html, result/w3c_html_glicer.html, result/... in your browser.
+In this example, you can view reports in result/w3c_css_glicer.html, result/w3c_html_glicer.html, result/... from your browser.
 
 
 ## Use html validator offline
@@ -71,8 +71,8 @@ In this example, you can view reports result/w3c_css_glicer.html, result/w3c_htm
 Docker must be installed
 
 ```bash
-    docker pull magnetikonline/html5validator
-    docker run -d -p 8080:80 -p 8888:8888 magnetikonline/html5validator
+docker pull magnetikonline/html5validator
+docker run -d -p 8080:80 -p 8888:8888 magnetikonline/html5validator
 ```
 
 Validator nu Java server on port 8888
@@ -80,7 +80,7 @@ Validator nu Java server on port 8888
 Pass url of validator nu to constructor :
 
 ```php
-    $validator = new GlW3CValidator(__DIR__ . "/result","http://127.0.0.1:8888");
+$validator = new GlW3CValidator(__DIR__ . "/result","http://127.0.0.1:8888");
 ```
 
 ## Running Tests
