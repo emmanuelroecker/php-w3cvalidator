@@ -65,7 +65,27 @@ php composer.phar install
 
 In this example, you can view reports result/w3c_css_glicer.html, result/w3c_html_glicer.html, result/... in your browser.
 
+
+## Use html validator offline
+
+Docker must be installed
+
+```bash
+    docker pull magnetikonline/html5validator
+    docker run -d -p 8080:80 -p 8888:8888 magnetikonline/html5validator
+```
+
+Validator nu Java server on port 8888
+
+Pass url of validator nu to constructor :
+
+```php
+    $validator = new GlW3CValidator(__DIR__ . "/result","http://127.0.0.1:8888");
+```
+
 ## Running Tests
+
+You must be online
 
 Launch from command line :
 
