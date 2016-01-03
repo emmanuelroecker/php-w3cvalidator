@@ -1,9 +1,9 @@
 # php-w3cvalidator
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/emmanuelroecker/php-w3cvalidator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/emmanuelroecker/php-w3cvalidator/?branch=master)
 [![Build Status](https://travis-ci.org/emmanuelroecker/php-w3cvalidator.svg?branch=master)](https://travis-ci.org/emmanuelroecker/php-w3cvalidator)
 [![Coverage Status](https://coveralls.io/repos/emmanuelroecker/php-w3cvalidator/badge.svg?branch=master&service=github)](https://coveralls.io/github/emmanuelroecker/php-w3cvalidator?branch=master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/66e60d74-1f4c-489e-8d9d-4e5bd78c7cbc/mini.png)](https://insight.sensiolabs.com/projects/66e60d74-1f4c-489e-8d9d-4e5bd78c7cbc)
-
 
 Validate html and css files using [w3c markup validation](http://validator.w3.org/) and [w3c css validation](http://jigsaw.w3.org/css-validator/).
 
