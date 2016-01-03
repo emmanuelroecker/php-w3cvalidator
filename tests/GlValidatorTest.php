@@ -30,7 +30,7 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
     public function testHtml()
     {
         $finder = new Finder();
-        $files  = $finder->files()->in(__DIR__ . "/entry/");
+        $files  = $finder->files()->sortByName()->in(__DIR__ . "/entry/");
         $files  = [$files, __DIR__ . "/glicer.css", __DIR__ . "/glicer.html"];
 
         $validator = new GlW3CValidator(__DIR__ . "/result", URL_HTML_VALIDATOR, URL_CSS_VALIDATOR);
@@ -82,7 +82,7 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
     public function testHtmlCss()
     {
         $finder = new Finder();
-        $files  = $finder->files()->in(__DIR__ . "/entry/");
+        $files  = $finder->files()->sortByName()->in(__DIR__ . "/entry/");
         $files  = [$files, __DIR__ . "/glicer.css", __DIR__ . "/glicer.html"];
 
         $validator = new GlW3CValidator(__DIR__ . "/result", URL_HTML_VALIDATOR, URL_CSS_VALIDATOR);
