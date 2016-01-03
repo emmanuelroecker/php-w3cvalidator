@@ -7,7 +7,7 @@ services:
   - docker
 before_install:
   - docker pull magnetikonline/html5validator
-  - docker run -d -p 8080:80 -p 8888:8888 magnetikonline/html5validator
+  - docker run -d -p 127.0.0.1:8080:80 -p 127.0.0.1:8888:8888 magnetikonline/html5validator
 install:
   - composer install
 script:

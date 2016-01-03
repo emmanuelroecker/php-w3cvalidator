@@ -31,24 +31,24 @@ use GlHtml\GlHtml;
  */
 class GlW3CValidator
 {
-    const MAX_RETRY     = 3;
+    const MAX_RETRY = 3;
 
     private $types = [
         'html' => [
-            'w3curl'    => "http://validator.w3.org/check",
+            'validator' => '/',
             'resulttag' => '#results',
-            'field'     => 'uploaded_file',
+            'field'     => 'file',
             'css'       => [
-                'url("https://validator.w3.org/nu/style.css")'
+                '/style.css'
             ]
         ],
         'css'  => [
-            'w3curl'    => "http://jigsaw.w3.org/css-validator/validator",
+            'validator' => '/validator',
             'resulttag' => '#results_container',
             'field'     => 'file',
             'css'       => [
-                'url("http://jigsaw.w3.org/css-validator/style/base.css")',
-                'url("http://jigsaw.w3.org/css-validator/style/results.css")'
+                '/style/base.css',
+                '/style/results.css'
             ]
         ]
     ];
@@ -63,10 +63,21 @@ class GlW3CValidator
      */
     private $resultrootdir;
 
-    public function __construct($resultrootdir)
-    {
+    /**
+     * @param string $resultrootdir
+     * @param string $urlHtmlValidator
+     * @param string $urlCssValidator
+     */
+    public function __construct(
+        $resultrootdir,
+        $urlHtmlValidator = "https://validator.w3.org/nu",
+        $urlCssValidator = "http://jigsaw.w3.org/css-validator"
+    ) {
         $this->fs            = new Filesystem();
         $this->resultrootdir = $resultrootdir;
+
+        $this->types['html']['w3curl'] = $urlHtmlValidator;
+        $this->types['css']['w3curl']  = $urlCssValidator;
 
         if (!($this->fs->exists($resultrootdir))) {
             $this->fs->mkdir($resultrootdir);
@@ -75,6 +86,7 @@ class GlW3CValidator
 
     /**
      * @param string $w3curl
+     * @param string $validator
      * @param string $field
      * @param string $htmltag
      * @param string $file
@@ -83,10 +95,11 @@ class GlW3CValidator
      *
      * @return string
      */
-    private function sendToW3C($w3curl, $field, $htmltag, $file, $title, $csslist)
+    private function sendToW3C($w3curl, $validator, $field, $htmltag, $file, $title, $csslist)
     {
-        $client        = new Client();
-        $request  = $client->createRequest('POST', $w3curl, ['exceptions' => false]);
+        $client = new Client();
+
+        $request  = $client->createRequest('POST', $w3curl . $validator, ['exceptions' => false]);
         $postBody = $request->getBody();
         $postBody->addFile(
                  new PostFile($field, fopen(
@@ -111,7 +124,7 @@ class GlW3CValidator
         $html->delete('head style');
         $style = '<style type="text/css" media="all">';
         foreach ($csslist as $css) {
-            $style .= '@import ' . $css . ';';
+            $style .= '@import url("' . $w3curl . $css . '");';
         }
         $style .= '</style>';
         $html->get("head")[0]->add($style);
@@ -146,6 +159,7 @@ class GlW3CValidator
         $ext = $fileinfo->getExtension();;
         $view = $this->sendToW3C(
                      $this->types[$ext]['w3curl'],
+                         $this->types[$ext]['validator'],
                          $this->types[$ext]['field'],
                          $this->types[$ext]['resulttag'],
                          strtr($fileinfo->getRealPath(), ["\\" => "/"]),

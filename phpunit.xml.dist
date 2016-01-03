@@ -10,4 +10,8 @@
             <directory suffix=".php">src</directory>
         </whitelist>
     </filter>
+    <php>
+        <const name="URL_HTML_VALIDATOR" value="https://validator.w3.org/nu"/>
+        <const name="URL_CSS_VALIDATOR" value="http://jigsaw.w3.org/css-validator"/>
+    </php>
 </phpunit>
