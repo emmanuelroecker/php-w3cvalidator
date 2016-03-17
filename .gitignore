@@ -3,4 +3,4 @@ composer.lock
 composer-test.lock
 tests/result/
 vendor/
-.DS_STORE
+
