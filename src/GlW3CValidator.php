@@ -121,6 +121,10 @@ class GlW3CValidator
 
         $html = new GlHtml($html);
 
+        if ($html->get(".success")) {
+            return null;
+        }
+        
         $html->delete('head style');
         $style = '<style type="text/css" media="all">';
         foreach ($csslist as $css) {
@@ -136,7 +140,13 @@ class GlW3CValidator
         }
 
         $head   = $html->get("head")[0]->getHtml();
-        $result = $html->get($htmltag)[0]->getHtml();
+        
+        $resulttag = $html->get($htmltag);
+        if (count($resulttag) <= 0) {
+            $result = '<p class="failure">There were errors.</p>';
+        } else {        
+            $result = $resulttag[0]->getHtml();
+        }
 
         $view = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">' .
             $head . "</head><body><h2>$title</h2>" .
@@ -153,26 +163,28 @@ class GlW3CValidator
      */
     private function validateFile(SplFileInfo $fileinfo)
     {
-        $title   = strtr($fileinfo->getRelativePathname(), ["\\" => "/"]);
-        $filedir = $this->resultrootdir . '/' . strtr($fileinfo->getRelativepath(), ["\\" => "/"]);
-
-        $ext = $fileinfo->getExtension();;
-        $view = $this->sendToW3C(
-                     $this->types[$ext]['w3curl'],
-                         $this->types[$ext]['validator'],
-                         $this->types[$ext]['field'],
-                         $this->types[$ext]['resulttag'],
-                         strtr($fileinfo->getRealPath(), ["\\" => "/"]),
-                         $title,
-                         $this->types[$ext]['css']
+        $ext   = $fileinfo->getExtension();
+        $title = strtr($fileinfo->getRelativePathname(), ["\\" => "/"]);
+        $view  = $this->sendToW3C(
+                      $this->types[$ext]['w3curl'],
+                          $this->types[$ext]['validator'],
+                          $this->types[$ext]['field'],
+                          $this->types[$ext]['resulttag'],
+                          strtr($fileinfo->getRealPath(), ["\\" => "/"]),
+                          $title,
+                          $this->types[$ext]['css']
         );
 
+        if (!$view) {
+            return null;
+        }
+        
+        $filedir = $this->resultrootdir . '/' . strtr($fileinfo->getRelativepath(), ["\\" => "/"]);
         if (!$this->fs->exists($filedir)) {
             $this->fs->mkdir($filedir);
         }
         $resultname = $filedir . "/w3c_" . $ext . "_" . $fileinfo->getBaseName($ext) . 'html';
         file_put_contents($resultname, $view);
-
         return $resultname;
     }
 
@@ -204,6 +216,7 @@ class GlW3CValidator
         return $results;
     }
 
+
     /**
      * @param Finder   $files
      * @param string   $filter
@@ -218,7 +231,7 @@ class GlW3CValidator
          */
         foreach ($files as $file) {
             $callback($file);
-            $result[] = $this->validateFile($file);
+            $result[strtr($file->getRelativePath() . '/' . $file->getFilename(),["\\" => "/"])] = $this->validateFile($file);
         }
     }
 
@@ -238,13 +251,13 @@ class GlW3CValidator
              */
             foreach ($finder as $finderfile) {
                 $callback($finderfile);
-                $result[] = $this->validateFile($finderfile);
+                $result[strtr($finderfile->getRelativePath() . '/' . $finderfile->getFilename(),["\\" => "/"])] = $this->validateFile($finderfile);
             }
         } else {
             if (preg_match($filter, $file)) {
                 $finderfile = new SplFileInfo($file, "", "");
                 $callback($finderfile);
-                $result[] = $this->validateFile($finderfile);
+                $result[strtr($finderfile->getRelativePath() . '/' . $finderfile->getFilename(),["\\" => "/"])] = $this->validateFile($finderfile);
             }
         }
     }

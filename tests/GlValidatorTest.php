@@ -63,14 +63,13 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
         );
 
         $filestest = [
-            "test1/w3c_html_index.html",
-            "test2/w3c_html_index.html",
-            "w3c_html_glicer.html"
+            "test2/w3c_html_index.html"
         ];
-
-        $this->assertEquals(count($filestest), $count);
-        $this->assertEquals(count($filestest), count($result));
-
+               
+        $this->assertEquals(NULL,$result['test1/index.html']);
+        $this->assertNotEquals(NULL, $result['test2/index.html']);
+        $this->assertEquals(NULL, $result['/glicer.html']);
+        
         foreach ($filestest as $file) {
             $src = __DIR__ . "/expected/" . $file;
             $dst = __DIR__ . "/result/" . $file;
@@ -126,17 +125,19 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
         );
 
         $filestest = [
-            "test1/w3c_html_index.html",
             "test1/css/w3c_css_glicer.html",
             "test2/w3c_html_index.html",
             "test2/css/w3c_css_glicer.html",
-            "w3c_html_glicer.html",
             "w3c_css_glicer.html"
         ];
 
-        $this->assertEquals(count($filestest), $count);
-        $this->assertEquals(count($filestest), count($result));
-
+        $this->assertNotEquals(NULL, $result["test1/css/glicer.css"]);
+        $this->assertEquals(NULL,$result["test1/index.html"]);
+        $this->assertNotEquals(NULL, $result["test2/css/glicer.css"]);
+        $this->assertNotEquals(NULL, $result["test2/index.html"]);
+        $this->assertNotEquals(NULL, $result["/glicer.css"]);
+        $this->assertEquals(NULL, $result["/glicer.html"]);
+        
         foreach ($filestest as $file) {
             $src = __DIR__ . "/expected/" . $file;
             $dst = __DIR__ . "/result/" . $file;

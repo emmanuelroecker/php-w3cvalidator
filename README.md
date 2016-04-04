@@ -52,7 +52,7 @@ $files  = $finder->files()->in(__DIR__ . "/entry/");
  //add glicer.css and glicer.html
 $files  = [$files, __DIR__ . "/glicer.css", __DIR__ . "/glicer.html"];
 
-//return array of reports path in html format
+//return array of reports path in html format or null if ok 
 $results = $validator->validate(
                                 $files,
                                 ['html', 'css'],  //validate html and css files
@@ -61,9 +61,14 @@ $results = $validator->validate(
                                 }
                                 );
 
+var_dump($results);
 ```
 
-In this example, you can view reports in result/w3c_css_glicer.html, result/w3c_html_glicer.html, result/... from your browser.
+$results is an array that associate values to keys : 
+filename checked => W3C html report or null if no error
+
+In this example, 
+you can view reports in result/w3c_css_glicer.html, result/w3c_html_glicer.html, result/... from your browser.
 
 
 ## Use html validator offline
