@@ -102,7 +102,7 @@ class GlW3CValidator
     {
         $client = new Client();
 
-        $request  = $client->createRequest('POST', $w3curl . $validator, ['exceptions' => false]);
+        $request  = $client->createRequest('POST', $w3curl . $validator, ['exceptions' => false, 'verify' => false]);
         $postBody = $request->getBody();
         $postBody->addFile(
                  new PostFile($field, fopen(
