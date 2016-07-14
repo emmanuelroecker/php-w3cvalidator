@@ -124,7 +124,7 @@ class GlW3CValidator
 
         $html = new GlHtml($html);
 
-        if ($html->get("$selector")) {
+        if ($html->get($selector)) {
             return null;
         }
 
