@@ -36,6 +36,7 @@ class GlW3CValidator
     private $types = [
         'html' => [
             'validator' => '/',
+            'selector'  => '.success',
             'resulttag' => '#results',
             'field'     => 'file',
             'css'       => [
@@ -44,6 +45,7 @@ class GlW3CValidator
         ],
         'css'  => [
             'validator' => '/validator',
+            'selector'  => '#congrats',
             'resulttag' => '#results_container',
             'field'     => 'file',
             'css'       => [
@@ -87,6 +89,7 @@ class GlW3CValidator
     /**
      * @param string $w3curl
      * @param string $validator
+     * @param string $selector
      * @param string $field
      * @param string $htmltag
      * @param string $file
@@ -95,7 +98,7 @@ class GlW3CValidator
      *
      * @return string
      */
-    private function sendToW3C($w3curl, $validator, $field, $htmltag, $file, $title, $csslist)
+    private function sendToW3C($w3curl, $validator, $selector, $field, $htmltag, $file, $title, $csslist)
     {
         $client = new Client();
 
@@ -121,7 +124,7 @@ class GlW3CValidator
 
         $html = new GlHtml($html);
 
-        if ($html->get(".success")) {
+        if ($html->get($selector)) {
             return null;
         }
 
@@ -166,13 +169,14 @@ class GlW3CValidator
         $ext   = $fileinfo->getExtension();
         $title = strtr($fileinfo->getRelativePathname(), ["\\" => "/"]);
         $view  = $this->sendToW3C(
-                      $this->types[$ext]['w3curl'],
-                          $this->types[$ext]['validator'],
-                          $this->types[$ext]['field'],
-                          $this->types[$ext]['resulttag'],
-                          strtr($fileinfo->getRealPath(), ["\\" => "/"]),
-                          $title,
-                          $this->types[$ext]['css']
+            $this->types[$ext]['w3curl'],
+            $this->types[$ext]['validator'],
+            $this->types[$ext]['selector'],
+            $this->types[$ext]['field'],
+            $this->types[$ext]['resulttag'],
+            strtr($fileinfo->getRealPath(), ["\\" => "/"]),
+            $title,
+            $this->types[$ext]['css']
         );
 
         if ($view === null) {

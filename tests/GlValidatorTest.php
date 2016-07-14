@@ -131,7 +131,7 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
             "w3c_css_glicer.html"
         ];
 
-        $this->assertNotEquals(NULL, $result["test1/css/glicer.css"]);
+        $this->assertEquals(NULL, $result["test1/css/glicer.css"]);
         $this->assertEquals(NULL,$result["test1/index.html"]);
         $this->assertNotEquals(NULL, $result["test2/css/glicer.css"]);
         $this->assertNotEquals(NULL, $result["test2/index.html"]);
