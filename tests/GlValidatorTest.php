@@ -125,7 +125,7 @@ class GlValidatorTest extends \PHPUnit_Framework_TestCase
         );
 
         $filestest = [
-            "test1/css/w3c_css_glicer.html",
+ //           "test1/css/w3c_css_glicer.html",
             "test2/w3c_html_index.html",
             "test2/css/w3c_css_glicer.html",
             "w3c_css_glicer.html"
