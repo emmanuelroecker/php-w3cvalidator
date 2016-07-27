@@ -22,7 +22,7 @@ use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
 use GuzzleHttp\Client;
-use GuzzleHttp\Post\PostFile;
+use GuzzleHttp\Psr7\Request;
 use GlHtml\GlHtml;
 
 /**
@@ -102,19 +102,16 @@ class GlW3CValidator
     {
         $client = new Client();
 
-        $request  = $client->createRequest('POST', $w3curl . $validator, ['exceptions' => false, 'verify' => false]);
-        $postBody = $request->getBody();
-        $postBody->addFile(
-                 new PostFile($field, fopen(
-                     $file,
-                     'r'
-                 ))
-        );
-
         $retry    = self::MAX_RETRY;
         $response = null;
         while ($retry--) {
-            $response = $client->send($request);
+            $response = $client->post($w3curl . $validator,
+                [
+                    'exceptions' => false,
+                    'verify'     => false,
+                    'multipart'  => [['name' => $field, 'contents' => fopen($file, 'r')]]
+                ]
+            );
             if ($response->getStatusCode() == 200) {
                 break;
             }
@@ -169,14 +166,14 @@ class GlW3CValidator
         $ext   = $fileinfo->getExtension();
         $title = strtr($fileinfo->getRelativePathname(), ["\\" => "/"]);
         $view  = $this->sendToW3C(
-            $this->types[$ext]['w3curl'],
-            $this->types[$ext]['validator'],
-            $this->types[$ext]['selector'],
-            $this->types[$ext]['field'],
-            $this->types[$ext]['resulttag'],
-            strtr($fileinfo->getRealPath(), ["\\" => "/"]),
-            $title,
-            $this->types[$ext]['css']
+                      $this->types[$ext]['w3curl'],
+                          $this->types[$ext]['validator'],
+                          $this->types[$ext]['selector'],
+                          $this->types[$ext]['field'],
+                          $this->types[$ext]['resulttag'],
+                          strtr($fileinfo->getRealPath(), ["\\" => "/"]),
+                          $title,
+                          $this->types[$ext]['css']
         );
 
         if ($view === null) {
