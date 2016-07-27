@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4",
+        "php": ">=5.5",
         "guzzlehttp/guzzle": "~6.2",
         "symfony/filesystem": "~2.3|~3.0",
         "symfony/finder": "~2.3|~3.0",

@@ -22,7 +22,6 @@ use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
 use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
 use GlHtml\GlHtml;
 
 /**
