@@ -124,6 +124,7 @@ class GlW3CValidator
             return null;
         }
 
+        $html->delete('#w3c-include');
         $html->delete('head style');
         $style = '<style type="text/css" media="all">';
         foreach ($csslist as $css) {
